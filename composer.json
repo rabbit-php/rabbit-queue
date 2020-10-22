@@ -1,0 +1,28 @@
+{
+  "name": "rabbit/queue",
+  "description": "rabbit queue",
+  "type": "library",
+  "require": {
+    "php": ">=7.4.0",
+    "ext-swoole": ">=4.5.0",
+    "rabbit/base": "dev-master",
+    "jeremeamia/superclosure": "^2.4",
+    "symfony/console": "^5.0"
+  },
+  "require-dev": {
+    "swoole/ide-helper": "@dev",
+    "phpunit/phpunit": "*"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "albert",
+      "email": "63851587@qq.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Rabbit\\Queue\\": "src/"
+    }
+  }
+}
