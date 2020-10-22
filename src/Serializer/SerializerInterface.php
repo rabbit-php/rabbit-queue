@@ -8,5 +8,5 @@ namespace Rabbit\Queue\Serializer;
 interface SerializerInterface
 {
     public function serialize($object): string;
-    public function unSerialize(string $serialized);
+    public function unserialize(string $serialized);
 }

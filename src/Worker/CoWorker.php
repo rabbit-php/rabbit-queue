@@ -21,7 +21,7 @@ class CoWorker extends AbstractWorker
         wgeach($msg, function ($id, $m) use ($queue, &$ackIds, &$rmIds) {
             try {
                 $type = $m['type'];
-                $job = $type === Factory::SERIALIZER_TYPE_NULL ? $m['msg'] : Factory::getInstance($type)->unSerialize($m['msg']);
+                $job = $type === Factory::SERIALIZER_TYPE_NULL ? $m['msg'] : Factory::getInstance($type)->unserialize($m['msg']);
                 if (is_callable($job) || ($job instanceof JobInterface)) {
                     $job();
                 } elseif ($this->handler) {

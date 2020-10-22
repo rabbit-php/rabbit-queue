@@ -17,7 +17,7 @@ class PhpSerializer implements SerializerInterface
         return serialize($object);
     }
 
-    public function unSerialize(string $serialized)
+    public function unserialize(string $serialized)
     {
         return unserialize($serialized);
     }
