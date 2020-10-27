@@ -7,7 +7,6 @@ namespace Rabbit\Queue\Worker;
 use Throwable;
 use Rabbit\Base\App;
 use Rabbit\Queue\Queue;
-use Swoole\Coroutine\System;
 use Rabbit\Queue\JobInterface;
 use Rabbit\Queue\Serializer\Factory;
 use Rabbit\Base\Helper\ExceptionHelper;
@@ -31,7 +30,7 @@ class CoWorker extends AbstractWorker
             } catch (Throwable $e) {
                 $rmIds[] = $id;
                 App::error(ExceptionHelper::dumpExceptionToString($e));
-                System::sleep($queue->getSleep());
+                usleep($queue->getSleep() * 1000);
             } finally {
                 $ackIds[] = $id;
             }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Rabbit\Queue\Driver;
 
-use Rabbit\Queue\Driver\DriverInterface;
 
 abstract class AbstractDriver implements DriverInterface
 {

@@ -10,7 +10,6 @@ use Rabbit\DB\Redis\Redis;
 use Rabbit\Pool\BaseManager;
 use Rabbit\Base\Helper\ArrayHelper;
 use Rabbit\Base\Contract\InitInterface;
-use Rabbit\Queue\Driver\AbstractDriver;
 
 class RedisQueue extends AbstractDriver implements InitInterface
 {

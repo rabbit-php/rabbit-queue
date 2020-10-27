@@ -50,7 +50,7 @@ abstract class AbstractQueue implements QueryInterface
     {
         App::debug('Start listening to the queue ' . $this->driver->getChannel(), self::LOG_KEY);
         for ($i = 0; $i < $threadNum; $i++) {
-            go(function () use ($i) {
+            rgo(function () use ($i) {
                 while ($this->running) {
                     try {
                         $msg = $this->driver->pop($i);
