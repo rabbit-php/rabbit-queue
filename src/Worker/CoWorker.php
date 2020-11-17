@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Rabbit\Queue\Worker;
 
+use Closure;
 use Throwable;
 use Rabbit\Base\App;
 use Rabbit\Queue\Queue;
-use Rabbit\Queue\JobInterface;
 use Rabbit\Queue\Serializer\Factory;
 use Rabbit\Base\Helper\ExceptionHelper;
 
@@ -21,8 +21,11 @@ class CoWorker extends AbstractWorker
             try {
                 $type = $m['type'] ?? Factory::SERIALIZER_TYPE_NULL;
                 $job = $type === Factory::SERIALIZER_TYPE_NULL ? $m['msg'] : Factory::getInstance($type)->unserialize($m['msg']);
-                if (is_callable($job) || ($job instanceof JobInterface)) {
+                if ($job instanceof Closure) {
                     $job();
+                } elseif (is_array($job)) {
+                    [$class, $params] = $job;
+                    getDI($class)($params);
                 } elseif ($this->handler) {
                     $handler = $this->handler;
                     $handler($job);
@@ -30,7 +33,7 @@ class CoWorker extends AbstractWorker
             } catch (Throwable $e) {
                 $rmIds[] = $id;
                 App::error(ExceptionHelper::dumpExceptionToString($e));
-                usleep($queue->getSleep() * 1000);
+                usleep(intval($queue->getSleep() * 1000 * 1000));
             } finally {
                 $ackIds[] = $id;
             }

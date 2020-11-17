@@ -6,19 +6,19 @@ namespace Rabbit\Queue\Serializer;
 
 use Rabbit\Base\Exception\InvalidArgumentException;
 
-class PhpSerializer implements SerializerInterface
+class JsonSerializer implements SerializerInterface
 {
     public function serialize($object): string
     {
-        if (!is_object($object)) {
+        if (!is_array($object)) {
             throw new InvalidArgumentException('Argument invalid, it must be an object.');
         }
 
-        return serialize($object);
+        return json_encode($object);
     }
 
     public function unserialize(string $serialized)
     {
-        return unserialize($serialized);
+        return json_decode($serialized, true);
     }
 }
