@@ -7,13 +7,13 @@ namespace Rabbit\Queue\Worker;
 use Closure;
 use Throwable;
 use Rabbit\Base\App;
-use Rabbit\Queue\Queue;
 use Rabbit\Queue\Serializer\Factory;
 use Rabbit\Base\Helper\ExceptionHelper;
+use Rabbit\Queue\Queue;
 
 class CoWorker extends AbstractWorker
 {
-    public function process(array $msg, Queue $queue): void
+    public function process(array $msg, Queue $queue): array
     {
         $ackIds = [];
         $rmIds = [];
@@ -38,7 +38,6 @@ class CoWorker extends AbstractWorker
                 $ackIds[] = $id;
             }
         });
-        $ackIds && $queue->getDrvier()->success($ackIds);
-        $rmIds && $queue->getDrvier()->remove($rmIds);
+        return [$ackIds, $rmIds];
     }
 }

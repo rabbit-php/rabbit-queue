@@ -8,5 +8,5 @@ use Rabbit\Queue\Queue;
 
 interface IQueueWorker
 {
-    public function process(array $msg, Queue $queue): void;
+    public function process(array $msg, Queue $queue): array;
 }

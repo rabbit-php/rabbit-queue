@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Rabbit\Queue\Driver;
 
+use Closure;
 use Throwable;
 use Rabbit\Base\App;
 use Rabbit\DB\Redis\Redis;
@@ -50,7 +51,7 @@ class RedisQueue extends AbstractDriver implements InitInterface
         return $this->redis->xAdd($this->channel, '*', $message);
     }
 
-    public function pop(int $index = 0): array
+    public function pop(Closure $func, int $index = 0): void
     {
         $pool = $this->redis->getPool();
         $client = $pool->get();
@@ -71,7 +72,12 @@ class RedisQueue extends AbstractDriver implements InitInterface
             $pool->sub();
             App::error($e->getMessage());
         }
-        return $newItem[$this->channel] ?? [];
+        if (!isset($newItem[$this->channel])) {
+            return;
+        }
+        [$ackIds, $rmIds] = $func($newItem[$this->channel]);
+        $ackIds && $this->success($ackIds);
+        $rmIds && $this->remove($rmIds);
     }
 
     public function remove(array $ids): void

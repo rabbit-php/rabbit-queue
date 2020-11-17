@@ -53,8 +53,7 @@ abstract class AbstractQueue implements QueryInterface
             rgo(function () use ($i) {
                 while ($this->running) {
                     try {
-                        $msg = $this->driver->pop($i);
-                        $this->worker->process($msg, $this);
+                        $this->driver->pop(fn (array $msg) => $this->worker->process($msg, $this), $i);
                     } catch (Throwable $e) {
                         App::error(ExceptionHelper::dumpExceptionToString($e), self::LOG_KEY);
                     }
