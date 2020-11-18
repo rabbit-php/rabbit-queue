@@ -23,7 +23,7 @@ class AmqpQueue extends AbstractDriver
         'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT
     ];
 
-    public function __construct(BaseManager $manager, string $consumerTag = 'consumer', string $key = 'default')
+    public function __construct(BaseManager $manager, string $consumerTag = 'rabbit-queue', string $key = 'default')
     {
         $this->consumerTag = $consumerTag;
         $this->conn = $manager->get($key);
