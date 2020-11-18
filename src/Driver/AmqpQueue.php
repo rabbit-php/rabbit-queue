@@ -54,6 +54,7 @@ class AmqpQueue extends AbstractDriver
 
     public function remove(array $id): void
     {
+        throw new NotSupportedException("Not support remove!");
     }
 
     public function success(array $id): void
