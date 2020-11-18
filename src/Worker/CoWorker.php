@@ -17,7 +17,7 @@ class CoWorker extends AbstractWorker
     {
         $ackIds = [];
         $rmIds = [];
-        wgeach($msg, function ($id, $m) use ($queue, &$ackIds, &$rmIds) {
+        wgeach($msg, function ($id, $m) use (&$ackIds, &$rmIds) {
             try {
                 $type = $m['type'] ?? Factory::SERIALIZER_TYPE_NULL;
                 $job = $type === Factory::SERIALIZER_TYPE_NULL ? $m['msg'] : Factory::getInstance($type)->unserialize($m['msg']);
@@ -30,12 +30,10 @@ class CoWorker extends AbstractWorker
                     $handler = $this->handler;
                     $handler($job);
                 }
+                $ackIds[] = $id;
             } catch (Throwable $e) {
                 $rmIds[] = $id;
                 App::error(ExceptionHelper::dumpExceptionToString($e));
-                usleep(intval($queue->getSleep() * 1000 * 1000));
-            } finally {
-                $ackIds[] = $id;
             }
         });
         return [$ackIds, $rmIds];
