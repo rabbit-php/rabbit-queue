@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Rabbit\Queue\Driver;
 
 use Closure;
-use longlang\phpkafka\Consumer\ConsumeMessage;
 use longlang\phpkafka\Consumer\Consumer;
 use longlang\phpkafka\Producer\Producer;
 use Rabbit\Base\Exception\NotSupportedException;
