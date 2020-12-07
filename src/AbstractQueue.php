@@ -14,7 +14,7 @@ abstract class AbstractQueue implements QueryInterface
 {
     protected DriverInterface $driver;
     protected IQueueWorker $worker;
-    protected bool $running = true;
+    public bool $running = true;
     protected float $sleep = 3.0;
 
     const LOG_KEY = 'queue';
@@ -53,7 +53,7 @@ abstract class AbstractQueue implements QueryInterface
             rgo(function () use ($i) {
                 while ($this->running) {
                     try {
-                        $this->driver->pop(fn (array $msg) => $this->worker->process($msg, $this), $i);
+                        $this->driver->pop(fn (array $msg) => $this->worker->process($msg, $this), $this, $i);
                     } catch (Throwable $e) {
                         App::error(ExceptionHelper::dumpExceptionToString($e), self::LOG_KEY);
                     }

@@ -11,6 +11,7 @@ use Rabbit\DB\Redis\Redis;
 use Rabbit\Pool\BaseManager;
 use Rabbit\Base\Helper\ArrayHelper;
 use Rabbit\Base\Contract\InitInterface;
+use Rabbit\Queue\AbstractQueue;
 
 class RedisQueue extends AbstractDriver implements InitInterface
 {
@@ -51,33 +52,35 @@ class RedisQueue extends AbstractDriver implements InitInterface
         return $this->redis->xAdd($this->channel, '*', $message);
     }
 
-    public function pop(Closure $func, int $index = 0): void
+    public function pop(Closure $func, AbstractQueue $queue, int $index = 0): void
     {
-        $pool = $this->redis->getPool();
-        $client = $pool->get();
-        try {
-            $newItem = $client->xReadGroup(
-                $this->group,
-                $this->consumer . '-' . (App::$id ?? 0) . '-' . $index,
-                [$this->channel => '>'],
-                $this->batch,
-                0
-            );
-            if ($newItem === false) {
+        while ($queue->running) {
+            $pool = $this->redis->getPool();
+            $client = $pool->get();
+            try {
+                $newItem = $client->xReadGroup(
+                    $this->group,
+                    $this->consumer . '-' . (App::$id ?? 0) . '-' . $index,
+                    [$this->channel => '>'],
+                    $this->batch,
+                    0
+                );
+                if ($newItem === false) {
+                    $pool->sub();
+                } else {
+                    $client->release();
+                }
+            } catch (Throwable $e) {
                 $pool->sub();
-            } else {
-                $client->release();
+                App::error($e->getMessage());
             }
-        } catch (Throwable $e) {
-            $pool->sub();
-            App::error($e->getMessage());
+            if (!isset($newItem[$this->channel])) {
+                return;
+            }
+            [$ackIds, $rmIds] = $func($newItem[$this->channel]);
+            $ackIds && $this->success($ackIds);
+            $rmIds && $this->remove($rmIds);
         }
-        if (!isset($newItem[$this->channel])) {
-            return;
-        }
-        [$ackIds, $rmIds] = $func($newItem[$this->channel]);
-        $ackIds && $this->success($ackIds);
-        $rmIds && $this->remove($rmIds);
     }
 
     public function remove(array $ids): void
