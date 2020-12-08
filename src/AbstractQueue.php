@@ -51,12 +51,10 @@ abstract class AbstractQueue implements QueryInterface
         App::debug('Start listening to the queue ' . $this->driver->getChannel(), self::LOG_KEY);
         for ($i = 0; $i < $threadNum; $i++) {
             rgo(function () use ($i) {
-                while ($this->running) {
-                    try {
-                        $this->driver->pop(fn (array $msg) => $this->worker->process($msg, $this), $this, $i);
-                    } catch (Throwable $e) {
-                        App::error(ExceptionHelper::dumpExceptionToString($e), self::LOG_KEY);
-                    }
+                try {
+                    $this->driver->pop(fn (array $msg) => $this->worker->process($msg, $this), $this, $i);
+                } catch (Throwable $e) {
+                    App::error(ExceptionHelper::dumpExceptionToString($e), self::LOG_KEY);
                 }
             });
         }
