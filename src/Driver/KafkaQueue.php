@@ -54,7 +54,7 @@ class KafkaQueue extends AbstractDriver
                 if (empty($ackIds)) {
                     throw new RuntimeException('Queue error!');
                 }
-                $this->success($ackIds);
+                $this->consumer->ack($message);
             } else {
                 usleep((int) ($this->consumer->getConfig()->getInterval() * 1000000));
             }
@@ -73,9 +73,7 @@ class KafkaQueue extends AbstractDriver
 
     public function success(array $id): void
     {
-        foreach ($id as $i) {
-            $this->consumer->ack((int)$i); // ack
-        }
+        throw new NotSupportedException("Not support success!");
     }
 
     public function retry(): void
