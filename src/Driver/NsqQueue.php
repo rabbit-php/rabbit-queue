@@ -50,7 +50,7 @@ class NsqQueue extends AbstractDriver
             if (empty($ackIds)) {
                 throw new RuntimeException('Queue error!');
             }
-        }, $queue->running);
+        });
     }
 
     public function get(string $id): array
