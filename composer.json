@@ -6,7 +6,7 @@
     "php": ">=7.4.0",
     "rabbit/base": "dev-master",
     "opis/closure": "^3.6",
-    "symfony/console": "^5.0"
+    "symfony/console": "^6"
   },
   "require-dev": {
     "swoole/ide-helper": "@dev",
