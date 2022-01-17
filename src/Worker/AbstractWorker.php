@@ -8,10 +8,7 @@ use Rabbit\Queue\IArrayHandler;
 
 abstract class AbstractWorker implements IQueueWorker
 {
-    protected ?IArrayHandler $handler;
-    
-    public function __construct(IArrayHandler $handler = null)
+    public function __construct(protected ?IArrayHandler $handler = null)
     {
-        $this->handler = $handler;
     }
 }

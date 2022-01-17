@@ -15,7 +15,6 @@ use Rabbit\Queue\AbstractQueue;
 
 class RedisQueue extends AbstractDriver implements InitInterface
 {
-
     protected Redis $redis;
 
     protected string $group = 'rabbit';

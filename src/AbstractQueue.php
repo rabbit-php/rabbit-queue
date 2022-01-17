@@ -12,17 +12,13 @@ use Rabbit\Queue\Driver\DriverInterface;
 
 abstract class AbstractQueue implements QueryInterface
 {
-    protected DriverInterface $driver;
-    protected IQueueWorker $worker;
     public bool $running = true;
     protected float $sleep = 3.0;
 
     const LOG_KEY = 'queue';
 
-    public function __construct(DriverInterface $driver, IQueueWorker $worker)
+    public function __construct(protected DriverInterface $driver, protected IQueueWorker $worker)
     {
-        $this->driver = $driver;
-        $this->worker = $worker;
     }
 
     public function getSleep(): float
