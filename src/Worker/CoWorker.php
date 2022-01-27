@@ -17,7 +17,7 @@ class CoWorker extends AbstractWorker
     {
         $ackIds = [];
         $rmIds = [];
-        wgeach($msg, function ($id, $m) use (&$ackIds, &$rmIds) {
+        wgeach($msg, function ($id, $m) use (&$ackIds, &$rmIds): void {
             try {
                 $type = $m['type'] ?? Factory::SERIALIZER_TYPE_NULL;
                 $job = $type === Factory::SERIALIZER_TYPE_NULL ? $m['msg'] : Factory::getInstance($type)->unserialize($m['msg']);

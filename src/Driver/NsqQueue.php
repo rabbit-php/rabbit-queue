@@ -45,7 +45,7 @@ class NsqQueue extends AbstractDriver
             $this->consumer = $this->manager->getConsumer($this->key);
             $this->consumer->makeTopic($this->topic, $this->channel);
         }
-        $this->consumer->subscribe($this->topic, $this->channel, $this->config, function (array $message) use ($func) {
+        $this->consumer->subscribe($this->topic, $this->channel, $this->config, function (array $message) use ($func): void {
             [$ackIds] = $func([$message['id'] => json_decode($message['payload'], true)]);
             if (empty($ackIds)) {
                 throw new RuntimeException('Queue error!');

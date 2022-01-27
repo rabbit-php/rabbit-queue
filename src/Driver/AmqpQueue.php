@@ -38,7 +38,7 @@ class AmqpQueue extends AbstractDriver
     {
         $amqp = $this->conn->get();
         $this->conn->sub();
-        $amqp->consume($this->channel, false, false, false, false, function (AMQPMessage $msg) use ($func) {
+        $amqp->consume($this->channel, false, false, false, false, function (AMQPMessage $msg) use ($func): void {
             [$ackIds] = $func([$msg->getDeliveryTag() => json_decode($msg->getBody(), true)]);
             if (empty($ackIds)) {
                 throw new RuntimeException('Queue error!' . PHP_EOL . VarDumper::getDumper()->dumpAsString($msg->delivery_info));
