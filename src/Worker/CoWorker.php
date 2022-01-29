@@ -25,7 +25,7 @@ class CoWorker extends AbstractWorker
                     $job();
                 } elseif (is_array($job)) {
                     [$class, $params] = $job;
-                    getDI($class)($params);
+                    service($class)($params);
                 } elseif ($this->handler) {
                     $handler = $this->handler;
                     $handler($job);
