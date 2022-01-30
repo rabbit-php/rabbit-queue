@@ -25,7 +25,7 @@ class CoWorker extends AbstractWorker
                     $job();
                 } elseif (is_array($job)) {
                     [$class, $params] = $job;
-                    service($class)($params);
+                    create($class)($params);
                 } elseif ($this->handler) {
                     $handler = $this->handler;
                     $handler($job);
